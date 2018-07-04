@@ -52,18 +52,27 @@ if __name__ == "__main__":
         except Exception,e:
             continue
         
-        #check license count
-        m = re.search('<dt>Allowed Cisco node count:</dt><dd>([0-9]+)',  content)
-        licenses = int(m.group(1))
-        if licenses>5:
-            print('VIRL license accquired already, no renew required')
-            exit(0)
+        renew = False
+        if content.find('Failed to collect current salt')>-1: #license expired more than 7 days
+            renew = True
+        else:
+            m = re.search('<dt>Allowed Cisco node count:</dt><dd>([0-9]+)',  content)
+            licenses = int(m.group(1))
+            if licenses>5:
+                print('VIRL license accquired already, no renew required')
+                renew = False
+            else:
+                renew = True
         #renew license page
-        print('Renew license {0} times...'.format(retry+1))
-        renew_url = url_base + '/admin/salt/?renew=1'
-        try:
-            content = opener.open(renew_url)
-        except Exception, e:
-            pass
+        if renew:
+            #renew license page
+            print('Renew license {0} times...'.format(retry+1))
+            renew_url = url_base + '/admin/salt/?renew=1'
+            try:
+                content = opener.open(renew_url)
+            except Exception, e:
+                pass
+        else:
+            break 
         time.sleep(10)    
         
