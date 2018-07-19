@@ -73,6 +73,8 @@ if __name__ == "__main__":
             except Exception, e:
                 pass
         else:
+            print('wait extra 2 minutes for VIRL fully renewal')
+            time.sleep(120)
             break 
         time.sleep(10)    
         
