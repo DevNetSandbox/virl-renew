@@ -1,0 +1,14 @@
+- hosts: all
+  become: true
+  tasks:
+    - name: restart neutron service
+      command: "{{ item }}"
+      ansible_user: virl
+      ansible_ssh_pass: VIRL
+      with_items:
+        - sudo service neutron-dhcp-agent restart
+        - sudo service neutron-l3-agent restart
+        - sudo service neutron-linuxbridge-agent restart
+        - sudo service neutron-linuxbridge-cleanup restart
+        - sudo service neutron-metadata-agent restart
+        - sudo service neutron-server restart
